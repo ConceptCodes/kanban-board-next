@@ -1,3 +1,6 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
 import { PlusCircleIcon, icons } from "lucide-react";
 import { useState } from "react";
 
@@ -17,23 +20,22 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import Icon from "./icon";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-
-import { useToast } from "../hooks/useToast";
-import { api } from "@/utils/api";
-import { useForm } from "react-hook-form";
-import { insertTaskSchema } from "@/server/db/schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { ToastAction } from "./ui/toast";
 import { Textarea } from "./ui/textarea";
+
+import { useToast } from "@/hooks/useToast";
+import { api } from "@/utils/api";
+import { insertTaskSchema } from "@/server/db/schema";
+import useStore from "@/hooks/useStore";
 
 const AddTaskModal = () => {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const utils = api.useUtils();
+
+  const { currentBoard } = useStore();
 
   const form = useForm<z.infer<typeof insertTaskSchema>>({
     resolver: zodResolver(
@@ -74,7 +76,7 @@ const AddTaskModal = () => {
       <DialogTrigger asChild>
         <Button
           className="btn btn-primary disabled:bg-muted-foreground"
-          //   disabled={!currentBoard}
+          disabled={!currentBoard}
         >
           <PlusCircleIcon className="mr-2 inline-block h-6 w-6" />
           Add New Task

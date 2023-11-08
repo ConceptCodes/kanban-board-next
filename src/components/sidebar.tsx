@@ -29,8 +29,8 @@ import { Button } from "./ui/button";
 
 import { api } from "@/utils/api";
 import { useToast } from "@/hooks/useToast";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { cn } from "@/utils";
+import useStore from "@/hooks/useStore";
 
 const icons = ["📚", "💻", "🎨", "🎵", "🎥", "📷", "🏋️‍♂️", "🍔", "🌍", "🎓"];
 
@@ -42,10 +42,7 @@ export const Sidebar = () => {
 
   const utils = api.useUtils();
 
-  const [selectedBoard, setSelectedBoard] = useLocalStorage<Board | null>(
-    "selectedBoard",
-    null,
-  );
+  const { setCurrentBoard, currentBoard } = useStore();
 
   const addBoardMutation = api.main.createBoard.useMutation({
     onSuccess: () => {
@@ -103,10 +100,10 @@ export const Sidebar = () => {
         className={cn(
           "block flex rounded px-4 py-2.5 capitalize transition duration-200 hover:bg-gray-700",
           {
-            "bg-gray-700": selectedBoard?.id === board.id,
+            "bg-gray-700": currentBoard?.id === board.id,
           },
         )}
-        onClick={() => setSelectedBoard(board)}
+        onClick={() => setCurrentBoard(board)}
       >
         <span className="mr-2">{board.icon}</span>
         {board.title}
